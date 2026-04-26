@@ -21,6 +21,7 @@ import {
 
 import reonicLogo from "@/assets/reonic-logo.png";
 import { RoofMap } from "@/components/RoofMap";
+import { WeatherBadge } from "@/components/WeatherBadge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -233,6 +234,7 @@ function ReonicWizard() {
         savings={phase >= 3 && refinedRec ? refinedRec.annualSavings : null}
         onOpenKey={() => setShowKeyEditor(true)}
       />
+      <WeatherBadge location={discovery?.address ?? null} />
 
       <main className="flex-1 overflow-y-auto">
         {phase === 1 && (

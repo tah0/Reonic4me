@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reonic AI Roof Analyzer</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cesium.com/downloads/cesiumjs/releases/1.118/Build/Cesium/Widgets/widgets.css">
+    <style>
+        .cesium-viewer-toolbar, .cesium-viewer-bottom { display: none !important; }
+        .cesium-credit-logoContainer { display: none !important; }
+        * { box-sizing: border-box; }
+        body { margin: 0; background: #1a1a1a; font-family: sans-serif; color: white; height: 100vh; overflow: hidden; }
+        #app { display: flex; height: 100vh; }
+        #sidebar {
+            width: 340px; min-width: 340px; padding: 15px;
+            background: #111; overflow-y: auto; border-right: 1px solid #333;
+        }
+        h1 { margin: 0 0 12px; font-size: 1.2rem; color: #4ade80; }
+        input, select { width: 100%; padding: 8px; margin: 4px 0; border-radius: 4px; border: 1px solid #555; background: #222; color: white; font-size: 0.85rem; }
+        button.action { width: 100%; padding: 10px; margin: 6px 0; border-radius: 4px; border: none; background: #4ade80; color: black; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
+        button.action:hover { background: #22c55e; }
+        label { font-size: 0.8rem; color: #aaa; margin-top: 6px; display: block; }
+        #status { margin: 8px 0; font-size: 0.85rem; color: #aaa; }
+        #stats p { margin: 4px 0; font-size: 0.85rem; }
+        .segment { background: rgba(74,222,128,0.1); padding: 6px 8px; border-radius: 4px; margin: 3px 0; font-size: 0.78rem; }
+        .highlight { color: #4ade80; font-weight: bold; }
+        #viewer { flex: 1; position: relative; }
+        #map-container, #cesium-container { position: absolute; inset: 0; }
+        .hint { font-size: 0.7rem; color: #666; margin-top: 10px; }
+        .suggestion { padding: 8px 10px; cursor: pointer; font-size: 0.83rem; border-bottom: 1px solid #333; }
+        .suggestion:hover { background: #333; }
+        .suggestion small { color: #888; }
+        details[open] summary span { display: inline-block; transform: rotate(90deg); }
+        #view-toggle {
+            position: absolute; top: 10px; right: 10px; z-index: 1000;
+            background: rgba(0,0,0,0.65); border-radius: 6px;
+            display: flex; overflow: hidden; border: 1px solid #444;
+        }
+        .view-btn {
+            padding: 5px 14px; border: none; background: transparent;
+            color: #aaa; cursor: pointer; font-size: 0.8rem; font-weight: bold;
+        }
+        .view-btn.active { background: #4ade80; color: #000; }
+        .view-btn:not(.active):hover { background: rgba(255,255,255,0.08); }
+        .ev-toggle { display: flex; align-items: center; gap: 8px; margin: 6px 0; cursor: pointer; font-size: 0.82rem; color: #aaa; }
+        .ev-toggle input { width: auto; margin: 0; accent-color: #4ade80; cursor: pointer; }
+        #nn-panel { display: none; margin-top: 12px; padding-top: 10px; border-top: 1px solid #2a2a2a; }
+        .nn-grid { display: grid; grid-template-columns: auto 1fr 1fr; gap: 4px 8px; font-size: 0.76rem; margin: 6px 0; }
+        .nn-col-head { font-weight: bold; color: #4ade80; font-size: 0.7rem; text-transform: uppercase; padding-bottom: 3px; border-bottom: 1px solid #333; }
+        .nn-label { color: #666; align-self: center; }
+        .nn-val { color: #ccc; }
+        .nn-val.match { color: #4ade80; }
+        .prob-row { display: grid; grid-template-columns: 80px 1fr 36px; align-items: center; gap: 6px; margin: 4px 0; font-size: 0.76rem; }
+        .prob-label { color: #aaa; }
+        .prob-track { background: #2a2a2a; border-radius: 3px; height: 7px; overflow: hidden; }
+        .prob-fill { height: 100%; border-radius: 3px; background: #4ade80; transition: width 0.4s; }
+        .prob-pct { color: #ccc; text-align: right; }
+        .hp-box { margin: 8px 0; padding: 8px 10px; border-radius: 5px; font-size: 0.78rem; line-height: 1.4; }
+        .hp-box.yes { background: rgba(74,222,128,0.1); border-left: 3px solid #4ade80; }
+        .hp-box.no  { background: rgba(100,100,100,0.1); border-left: 3px solid #555; }
+        .hp-box.ask { background: rgba(250,204,21,0.08); border-left: 3px solid #facc15; }
+        .nn-neighbor { background: #1a1a1a; border-radius: 4px; padding: 6px 8px; margin: 3px 0; font-size: 0.74rem; color: #999; }
+        .nn-neighbor strong { color: #ccc; }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div id="sidebar">
+            <h1>☀️ Reonic Roof Analyzer</h1>
+            <div style="position:relative;">
+                <input id="address-input" type="text" placeholder="e.g. Charité Berlin, BER Airport..." autocomplete="off">
+                <div id="suggestions" style="position:absolute;top:100%;left:0;right:0;background:#222;border:1px solid #555;border-top:none;border-radius:0 0 4px 4px;max-height:200px;overflow-y:auto;display:none;z-index:999;"></div>
+            </div>
+            <label>Annual energy demand (kWh)</label>
+            <input id="demand-input" type="number" placeholder="e.g. 4500" value="4500">
+            <label>Current heating system</label>
+            <select id="heating-input">
+                <option value="">Unknown</option>
+                <option value="Gas">Gas</option>
+                <option value="Oil">Oil</option>
+                <option value="Heatpump">Heat pump (existing)</option>
+                <option value="OtherNonRenewable">Other (non-renewable)</option>
+            </select>
+            <label class="ev-toggle"><input type="checkbox" id="has-ev-input"> Has electric vehicle (EV)</label>
+            <button class="action" id="analyze-btn">Analyze Roof & Generate Offer</button>
+            <p id="status">Enter an address to analyze its solar potential</p>
+            <div id="stats"></div>
+            <div id="nn-panel"></div>
+            <p class="hint">Powered by Google Solar API + Reonic project data</p>
+        </div>
+        <div id="viewer">
+            <div id="map-container"></div>
+            <div id="cesium-container" style="display:none"></div>
+            <div id="view-toggle">
+                <button class="view-btn active" id="btn-2d">2D</button>
+                <button class="view-btn" id="btn-3d">3D</button>
+            </div>
+        </div>
+    </div>
+    <script>window.CESIUM_BASE_URL = 'https://cesium.com/downloads/cesiumjs/releases/1.118/Build/Cesium/';</script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.118/Build/Cesium/Cesium.js"></script>
+    <script>
+        fetch('.env').then(r => r.text()).then(text => {
+            const match = text.match(/MAPS_API_KEY=(.+)/);
+            window.__API_KEY__ = match ? match[1].trim() : '';
+            const s = document.createElement('script');
+            s.type = 'module';
+            s.src = 'viewer.js';
+            document.body.appendChild(s);
+        });
+    </script>
+</body>
+</html>

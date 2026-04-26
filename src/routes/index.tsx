@@ -731,7 +731,7 @@ function PhaseAlignment({
   return (
     <section className="mx-auto max-w-4xl px-6 py-10">
       <span className="mb-3 inline-flex w-fit items-center gap-2 rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
-        Phase 3 · Path reveal
+        Path reveal
       </span>
 
       <Card

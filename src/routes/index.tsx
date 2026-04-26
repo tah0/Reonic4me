@@ -56,13 +56,13 @@ import {
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Reonic — Your home, your energy path" },
+      { title: "Reonic4me — Your home, your energy path" },
       {
         name: "description",
         content:
           "See your roof in 3D, get a personalized solar + heat-pump roadmap, and download an installer brief in minutes.",
       },
-      { property: "og:title", content: "Reonic — Your home, your energy path" },
+      { property: "og:title", content: "Reonic4me — Your home, your energy path" },
       {
         property: "og:description",
         content:

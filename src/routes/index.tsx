@@ -212,7 +212,6 @@ function ReonicWizard() {
         phase={phase}
         archetype={phase >= 3 ? archetype : null}
         savings={phase >= 3 && refinedRec ? refinedRec.annualSavings : null}
-        onOpenKey={() => setShowKeyEditor(true)}
       />
       <WeatherBadge location={discovery?.address ?? null} />
 
@@ -285,17 +284,6 @@ function ReonicWizard() {
           />
         )}
       </main>
-
-      {showKeyEditor && (
-        <ApiKeyEditor
-          initial={apiKey}
-          onSave={(k) => {
-            saveApiKey(k);
-            setShowKeyEditor(false);
-          }}
-          onClose={() => setShowKeyEditor(false)}
-        />
-      )}
     </div>
   );
 }
@@ -307,12 +295,10 @@ function TopBar({
   phase,
   archetype,
   savings,
-  onOpenKey,
 }: {
   phase: Phase;
   archetype: Archetype | null;
   savings: number | null;
-  onOpenKey: () => void;
 }) {
   const labels = ["Discovery", "Profile", "Path", "Roadmap", "Brief"];
   return (

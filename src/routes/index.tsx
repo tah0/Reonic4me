@@ -540,7 +540,7 @@ function PhaseLogic({
     <section className="mx-auto max-w-3xl px-6 py-10">
       <span className="mb-3 inline-flex w-fit items-center gap-2 rounded-full bg-[color-mix(in_oklab,var(--reonic-yellow)_60%,white)] px-3 py-1 text-xs font-medium text-foreground">
         <Sparkles className="h-3.5 w-3.5" />
-        Phase 2 · Profile
+        Profile
       </span>
       <h2 className="text-3xl font-semibold tracking-tight">
         Four quick questions, one tailored path.

@@ -29,13 +29,13 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Reonic AI Roof Analyzer" },
+      { title: "Reonic4me" },
       {
         name: "description",
         content:
           "AI-powered renewable energy designer. Enter an address to analyze its solar potential and generate a tailored PV + battery + heat-pump proposal.",
       },
-      { property: "og:title", content: "Reonic AI Roof Analyzer" },
+      { property: "og:title", content: "Reonic4me" },
       {
         property: "og:description",
         content:
@@ -43,6 +43,12 @@ export const Route = createRootRoute({
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "Reonic4me" },
+      { name: "description", content: "Build and customize user interfaces for your projects with a guided, multi-phase experience." },
+      { property: "og:description", content: "Build and customize user interfaces for your projects with a guided, multi-phase experience." },
+      { name: "twitter:description", content: "Build and customize user interfaces for your projects with a guided, multi-phase experience." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/bb34f4d5-c182-481f-8898-798007dcc5ea/id-preview-183dceaa--5f65ac96-ac4c-4084-b22a-2bba97679820.lovable.app-1777201710914.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/bb34f4d5-c182-481f-8898-798007dcc5ea/id-preview-183dceaa--5f65ac96-ac4c-4084-b22a-2bba97679820.lovable.app-1777201710914.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

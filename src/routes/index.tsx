@@ -832,13 +832,13 @@ function PhaseRoadmap({
   return (
     <section className="mx-auto max-w-5xl px-6 py-10">
       <span className="mb-3 inline-flex w-fit items-center gap-2 rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
-        Phase 4 · Roadmap
+        Roadmap
       </span>
       <h2 className="text-3xl font-semibold tracking-tight">
         Your {roadmap.length}-step path to a future-proof home
       </h2>
       <p className="mt-2 max-w-2xl text-muted-foreground">
-        Each step unlocks the next — no over-spending on hardware you don&apos;t need.
+        Each step unlocks the next, so you're getting the hardware you need.
       </p>
 
       <ol className="mt-10 space-y-6">

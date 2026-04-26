@@ -553,39 +553,39 @@ function PhaseLogic({
         <QuestionGroup
           n={1}
           title="When was your home built?"
-          why="Decides whether we start with insulation or jump straight to solar."
+          why="Older homes usually lose more heat. Knowing the age helps us decide if we should fix leaks first, to save system power later."
         >
           <ChoiceGrid
             value={quiz.homeAge}
             onChange={(v) => setQuiz({ ...quiz, homeAge: v as HomeAge })}
             options={[
-              { v: "pre1990", label: "Before 1990", sub: "Likely needs insulation" },
-              { v: "1990to2010", label: "1990 – 2010", sub: "Usually solar-first" },
-              { v: "post2010", label: "After 2010", sub: "Modern envelope" },
+              { v: "pre1990", label: "Before 1990", sub: "" },
+              { v: "1990to2010", label: "1990 – 2010", sub: "" },
+              { v: "post2010", label: "After 2010", sub: "" },
             ]}
           />
         </QuestionGroup>
 
         <QuestionGroup
           n={2}
-          title="What is your top priority?"
-          why="Determines your archetype: Optimizer, Pioneer, or Autarky."
+          title="What is your main goal for this project?"
+          why="Everyone's priorities are different. We'll build a path that matches your goal and considers what other people with homes like yours chose."
         >
           <ChoiceGrid
             value={quiz.goal}
             onChange={(v) => setQuiz({ ...quiz, goal: v as Goal })}
             options={[
-              { v: "lower_bills", label: "Lowering bills", sub: "Fastest payback" },
-              { v: "stop_gas", label: "Stopping gas", sub: "Electrify heating" },
-              { v: "self_sufficient", label: "Self-sufficiency", sub: "Off-grid mindset" },
+              { v: "lower_bills", label: "Lower my bills", sub: "Fastest payback" },
+              { v: "stop_gas", label: "Stop using gas or oil", sub: "Electrify heating" },
+              { v: "self_sufficient", label: "Make my own power", sub: "Off-grid mindset" },
             ]}
           />
         </QuestionGroup>
 
         <QuestionGroup
           n={3}
-          title="Do you have or plan to get an EV?"
-          why="Triggers a Wallbox step and grows the recommended battery."
+          title="Do you have or plan to get an Electric Car (EV)?"
+          why="Electric cars use a lot of power. If you have one, we'll make sure your batter is big enough to charge your car, with the sun."
         >
           <ChoiceGrid
             value={quiz.hasEv ? "yes" : "no"}
@@ -599,8 +599,8 @@ function PhaseLogic({
 
         <QuestionGroup
           n={4}
-          title="Average monthly electric bill?"
-          why="Calibrates ROI and payback projections."
+          title="About how much is your monthly electric bill?"
+          why="This helps us calculate your 'Payback Day' - the exact date your system will have saved you enough money to pay for itself."
         >
           <div className="rounded-lg border border-border bg-card p-5">
             <div className="flex items-baseline justify-between">

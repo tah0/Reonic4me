@@ -656,7 +656,7 @@ function QuestionGroup({
         </span>
         <h3 className="text-lg font-medium">{title}</h3>
       </div>
-      <p className="ml-9 mt-1 text-xs text-muted-foreground">Why: {why}</p>
+      <p className="ml-9 mt-1 text-xs text-muted-foreground">{why}</p>
       <div className="ml-9 mt-3">{children}</div>
     </div>
   );

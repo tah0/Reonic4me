@@ -390,10 +390,6 @@ function TopBar({
             </span>
           </div>
         )}
-        <Button variant="ghost" size="sm" onClick={onOpenKey} className="gap-2">
-          <KeyRound className="h-4 w-4" />
-          API key
-        </Button>
       </div>
     </header>
   );

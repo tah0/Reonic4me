@@ -428,15 +428,13 @@ function PhaseDiscovery({
       <div className="flex flex-col justify-center">
         <span className="mb-3 inline-flex w-fit items-center gap-2 rounded-full bg-[color-mix(in_oklab,var(--reonic-green)_50%,white)] px-3 py-1 text-xs font-medium text-foreground">
           <Sparkles className="h-3.5 w-3.5" />
-          Phase 1 · Discovery
+          Discovery
         </span>
         <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">
-          Your roof. <br />
-          Your savings, mapped.
+          See what your roof can do.
         </h1>
         <p className="mt-4 max-w-md text-base text-muted-foreground">
-          Enter your address — we&apos;ll scan your roof with Google Solar, then guide you
-          through the cheapest path to slash your energy bill.
+          Enter your address, and we’ll use a 3D scan to show you exactly how much power your home can generate.
         </p>
 
         <div className="relative mt-8 max-w-md">

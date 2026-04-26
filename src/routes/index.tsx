@@ -7,7 +7,6 @@ import {
   Download,
   Flame,
   Home,
-  KeyRound,
   Leaf,
   Loader2,
   MapPin,
@@ -31,7 +30,6 @@ import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 
 import {
-  fetchSolar,
   fetchSuggestions,
   geocode,
   recommendSystem,
@@ -39,6 +37,8 @@ import {
   type Recommendation,
   type Suggestion,
 } from "@/lib/solar";
+import { fetchSolarServer } from "@/utils/solar.functions";
+import { useServerFn } from "@tanstack/react-start";
 import { loadKNNData, type Neighbor } from "@/lib/knn";
 import {
   ARCHETYPES,
@@ -74,8 +74,6 @@ export const Route = createFileRoute("/")({
   component: ReonicWizard,
 });
 
-const API_KEY_STORAGE = "reonic.maps_api_key";
-
 type Phase = 1 | 2 | 3 | 4 | 5;
 
 interface DiscoveryResult {
@@ -92,8 +90,7 @@ function ReonicWizard() {
   const [phase, setPhase] = useState<Phase>(1);
 
   // Phase 1
-  const [apiKey, setApiKey] = useState("");
-  const [showKeyEditor, setShowKeyEditor] = useState(false);
+  const callSolar = useServerFn(fetchSolarServer);
   const [address, setAddress] = useState("");
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [showSug, setShowSug] = useState(false);
@@ -112,19 +109,6 @@ function ReonicWizard() {
 
   // Phase 3 — neighbors
   const [neighbors, setNeighbors] = useState<Neighbor[]>([]);
-
-  // Hydrate API key
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const saved = window.localStorage.getItem(API_KEY_STORAGE) ?? "";
-    setApiKey(saved);
-    if (!saved) setShowKeyEditor(true);
-  }, []);
-
-  function saveApiKey(k: string) {
-    setApiKey(k);
-    if (typeof window !== "undefined") window.localStorage.setItem(API_KEY_STORAGE, k);
-  }
 
   function onAddressChange(v: string) {
     setAddress(v);
@@ -147,11 +131,6 @@ function ReonicWizard() {
   async function runDiscovery(forced?: string) {
     const q = (forced ?? address).trim();
     if (!q) return setError("Please enter an address.");
-    if (!apiKey) {
-      setError("A Google Maps API key is required.");
-      setShowKeyEditor(true);
-      return;
-    }
     setLoading(true);
     setError(null);
     setShowSug(false);
@@ -161,8 +140,9 @@ function ReonicWizard() {
         setError("Address not found. Try a more specific query.");
         return;
       }
-      let solar = await fetchSolar(geo.lat, geo.lon, apiKey, "HIGH");
-      if (solar.error) solar = await fetchSolar(geo.lat, geo.lon, apiKey, "MEDIUM");
+      let solar = await callSolar({ data: { lat: geo.lat, lon: geo.lon, quality: "HIGH" } });
+      if (solar.error)
+        solar = await callSolar({ data: { lat: geo.lat, lon: geo.lon, quality: "MEDIUM" } });
       if (solar.error || !solar.solarPotential) {
         setError(solar.error?.message ?? "No solar data available for this address.");
         return;
@@ -232,7 +212,6 @@ function ReonicWizard() {
         phase={phase}
         archetype={phase >= 3 ? archetype : null}
         savings={phase >= 3 && refinedRec ? refinedRec.annualSavings : null}
-        onOpenKey={() => setShowKeyEditor(true)}
       />
       <WeatherBadge location={discovery?.address ?? null} />
 
@@ -305,17 +284,6 @@ function ReonicWizard() {
           />
         )}
       </main>
-
-      {showKeyEditor && (
-        <ApiKeyEditor
-          initial={apiKey}
-          onSave={(k) => {
-            saveApiKey(k);
-            setShowKeyEditor(false);
-          }}
-          onClose={() => setShowKeyEditor(false)}
-        />
-      )}
     </div>
   );
 }
@@ -327,12 +295,10 @@ function TopBar({
   phase,
   archetype,
   savings,
-  onOpenKey,
 }: {
   phase: Phase;
   archetype: Archetype | null;
   savings: number | null;
-  onOpenKey: () => void;
 }) {
   const labels = ["Discovery", "Profile", "Path", "Roadmap", "Brief"];
   return (
@@ -1145,49 +1111,6 @@ function BriefRow({ label, value }: { label: string; value: string }) {
     <div className="flex items-center justify-between text-sm">
       <span className="text-muted-foreground">{label}</span>
       <span className="font-medium tabular-nums">{value}</span>
-    </div>
-  );
-}
-
-/* ──────────────────────────────────────────────────────────────────────────
- * API key editor
- * ────────────────────────────────────────────────────────────────────────── */
-function ApiKeyEditor({
-  initial,
-  onSave,
-  onClose,
-}: {
-  initial: string;
-  onSave: (k: string) => void;
-  onClose: () => void;
-}) {
-  const [val, setVal] = useState(initial);
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 p-4">
-      <Card className="w-full max-w-md p-6">
-        <div className="flex items-center gap-2">
-          <KeyRound className="h-5 w-5 text-[var(--reonic-blue)]" />
-          <h3 className="text-lg font-semibold">Google Maps API key</h3>
-        </div>
-        <p className="mt-2 text-sm text-muted-foreground">
-          We call the Google Solar API directly from your browser. The key is stored only in
-          your local storage.
-        </p>
-        <Input
-          value={val}
-          onChange={(e) => setVal(e.target.value)}
-          placeholder="AIza…"
-          className="mt-4"
-        />
-        <div className="mt-5 flex justify-end gap-2">
-          <Button variant="ghost" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button onClick={() => onSave(val.trim())} disabled={!val.trim()}>
-            Save key
-          </Button>
-        </div>
-      </Card>
     </div>
   );
 }

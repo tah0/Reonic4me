@@ -29,19 +29,32 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Reonic AI Roof Analyzer" },
+      {
+        name: "description",
+        content:
+          "AI-powered renewable energy designer. Enter an address to analyze its solar potential and generate a tailored PV + battery + heat-pump proposal.",
+      },
+      { property: "og:title", content: "Reonic AI Roof Analyzer" },
+      {
+        property: "og:description",
+        content:
+          "Analyze any rooftop's solar potential and generate a tailored renewable-energy proposal in seconds.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
+      { rel: "stylesheet", href: appCss },
       {
         rel: "stylesheet",
-        href: appCss,
+        href: "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css",
+      },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap",
       },
     ],
   }),

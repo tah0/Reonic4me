@@ -1022,7 +1022,7 @@ function PhaseAction({
   return (
     <section className="mx-auto max-w-4xl px-6 py-10">
       <span className="mb-3 inline-flex w-fit items-center gap-2 rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
-        Phase 5 · Action
+        Action
       </span>
       <h2 className="text-3xl font-semibold tracking-tight">
         Your installer brief is ready.
@@ -1093,7 +1093,7 @@ function PhaseAction({
               Connect with 3 vetted installers
             </h3>
             <p className="mt-2 text-sm text-muted-foreground">
-              We pre-filter installers with experience on homes like yours — same archetype,
+              We pre-filter installers with experience on homes like yours — similar households,
               similar roof size, comparable system.
             </p>
             <Button variant="default" className="mt-5 w-full">

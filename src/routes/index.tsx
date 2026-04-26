@@ -19,6 +19,7 @@ import {
   Wind,
 } from "lucide-react";
 
+import reonicLogo from "@/assets/reonic-logo.png";
 import { RoofMap } from "@/components/RoofMap";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -334,12 +335,13 @@ function TopBar({
   const labels = ["Discovery", "Profile", "Path", "Roadmap", "Brief"];
   return (
     <header className="flex items-center gap-6 border-b border-border bg-card px-6 py-3">
-      <div className="flex items-center gap-2">
-        <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[var(--reonic-blue)]">
-          <Sun className="h-5 w-5 text-white" />
-        </div>
-        <span className="text-sm font-semibold tracking-tight">Reonic</span>
-      </div>
+      <a href="/" className="flex items-center" aria-label="Reonic4me — home">
+        <img
+          src={reonicLogo}
+          alt="Reonic4me"
+          className="h-9 w-auto"
+        />
+      </a>
 
       <ol className="hidden flex-1 items-center gap-2 md:flex">
         {labels.map((l, i) => {
